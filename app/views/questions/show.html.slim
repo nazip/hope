@@ -1,0 +1,22 @@
+.container
+  = label_tag 'Вопрос: ' + @question.title, nil, class: 'text-error'
+  br
+  = text_area_tag nil, @question.body
+  br
+  - if not @question.answers.empty?
+    = label_tag 'Ответы:', nil, class: 'text-success'
+    br
+  - @question.answers.each do |answer|
+    - if answer.persisted?
+      = answer.body
+      br
+  hr
+
+  = form_for [@question, Answer.new], method: :post do |f|
+    = f.label 'Ваш ответ', class: 'text-error'
+    br
+    = f.text_area :body, size: "60x12"
+    br
+    = f.submit "Создать", class: 'btn btn-primary'
+  = link_to 'Показать все вопросы', action: :index, class: "btn btn-info"
+

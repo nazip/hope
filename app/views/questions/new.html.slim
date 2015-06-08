@@ -1,0 +1,10 @@
+.container
+  = form_for :question, url: { action: "create" }  do |f|
+    p
+    = f.label 'Заголовок'
+    = f.text_field :title
+    p
+    = f.label 'Вопрос'
+    = f.text_area :body, size: "60x12"
+    p
+    = f.submit "Создать вопрос", class: 'btn btn-primary'

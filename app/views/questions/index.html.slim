@@ -1,0 +1,15 @@
+.container
+  - @questions.each do |question|
+      = label_tag question.title, nil, class: 'text-info'
+      br
+      = text_area_tag question.title, question.body
+      - if not question.answers.empty?
+        h2= 'Ответы:'
+        - question.answers.each do |answer|
+          p= answer.body
+      - else
+        p
+      = link_to 'Добавить ответ', question, class: 'btn btn-info'
+      hr
+  br
+  = link_to 'Создать вопрос', new_question_path, class: 'btn btn-primary'
