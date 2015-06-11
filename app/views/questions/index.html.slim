@@ -1,12 +1,21 @@
 .container
+  - if user_signed_in?
+      = link_to 'Выход из сессии', 'users/sign_out', :method => :delete,  class: 'btn btn-danger'
+  - else
+      = link_to 'Создать сессию', 'users/sign_in', :method => :create,  class: 'btn btn-danger'
+  hr
   - @questions.each do |question|
       = label_tag question.title, nil, class: 'text-info'
       br
       = text_area_tag question.title, question.body
+      - if user_signed_in? and question.user_id == current_user.id
+        = link_to 'Удалить вопрос', question_path(question), :method => :delete, class: 'btn btn-danger'
       - if not question.answers.empty?
         h2= 'Ответы:'
         - question.answers.each do |answer|
           p= answer.body
+          - if user_signed_in? and answer.user_id == current_user.id
+            = link_to 'Удалить ответ', question_answer_path(question, answer), :method => :delete,  class: 'btn btn-danger'
       - else
         p
       = link_to 'Добавить ответ', question, class: 'btn btn-info'
