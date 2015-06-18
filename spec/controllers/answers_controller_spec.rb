@@ -60,26 +60,26 @@ RSpec.describe AnswersController, type: :controller do
     context 'with valid answer (signed user)' do
       it 'saved to the table answer' do
         expect do
-          post :create, question_id: question, answer: attributes_for(:answer)
+          post :create, question_id: question, answer: attributes_for(:answer), format: :js
         end.to change(question.answers, :count).by(1)
       end
       it 'created answer owned by signed user' do
         expect(Answer.last.user_id).to eq user.id
       end
-      it 'redirect to the question' do
-        post :create, question_id: question, answer: attributes_for(:answer)
-        expect(assigns(:answer)).to redirect_to question_path(assigns(:question))
+      it 'render create template' do
+        post :create, question_id: question, answer: attributes_for(:answer), format: :js
+        expect(response).to render_template :create
       end
     end
     context 'with invalid answer (signed user)' do
       it 'do not save to table answer' do
         expect do
-          post :create, question_id: question, answer: attributes_for(:invalidanswer)
+          post :create, question_id: question, answer: attributes_for(:invalidanswer), format: :js
         end.to_not change(Answer, :count)
       end
-      it 'render questions/show' do
-        post :create, question_id: question, answer: attributes_for(:invalidanswer)
-        expect(response).to render_template 'questions/show'
+      it 'render create template' do
+        post :create, question_id: question, answer: attributes_for(:invalidanswer), format: :js
+        expect(response).to render_template :create
       end
     end
   end

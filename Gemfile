@@ -53,6 +53,8 @@ group :test do
   gem 'rubocop'
   gem 'capybara'
   gem 'launchy'
+  gem 'database_cleaner'
+  gem 'selenium-webdriver'
 end
 
 gem 'bundler', '>= 1.8.4'

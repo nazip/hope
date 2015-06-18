@@ -1,0 +1,4 @@
+  - if answer.persisted?
+    p= answer.body
+    - if user_signed_in? and answer.user_id == current_user.id
+      = link_to 'Удалить ответ', question_answer_path(answer.question_id, answer) , method: "delete", class: 'btn btn-danger'
