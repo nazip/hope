@@ -3,12 +3,15 @@
     $('.answer-errors').html('<%= j message %>');
   <% end %>
 <% else %>
-  $('.answers').append('<%= j render @answer %>');
-  $('#answer_body').val('');
+  <% if @answer.best %>
+    $('.question-<%= @answer.question_id %> .answers').html('<%= j render @answer.question.answers %>');
+  <% else %>
+    $('.answer-<%= @answer.id %>').html('<%= j render @answer %>');
+  <% end %>
   $('.edit-answer-link').click(function(e) {
     e.preventDefault();
     $(this).hide();
-    answer_id = $(this).data('answerId')
+    answer_id = $(this).data('answerId');
     $('form#edit-answer-' + answer_id).show();
   });
 <% end %>

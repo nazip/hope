@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative 'acceptance_helper'
 
 feature 'view list of question and answer', %q(
   any user can view list of questions and answers
@@ -13,5 +13,5 @@ feature 'view list of question and answer', %q(
     expect(page).to have_content 'answer2'
     expect(page).to have_content 'First question'
     expect(page).to have_content 'Second question'
-   end
+  end
 end

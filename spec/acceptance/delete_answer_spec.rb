@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative 'acceptance_helper'
 
 feature 'delete answer', %q(
   user can delete his answer only
@@ -12,7 +12,7 @@ feature 'delete answer', %q(
     expect(page).to_not have_content 'Удалить ответ'
   end
 
-  scenario 'authenticated user can delete his answer' do
+  scenario 'authenticated user can delete his answer', js: true do
     sign_in user
     visit questions_path
     expect(page).to have_content 'my answer'
@@ -20,7 +20,7 @@ feature 'delete answer', %q(
     expect(page).to_not have_content 'my answer'
   end
 
-  scenario 'authenticated user can NOT delete the answer owned by other user' do
+  scenario 'authenticated user can NOT delete the answer owned by other user', js: true do
     sign_in user1
     visit questions_path
     expect(page).to have_content 'my answer'
