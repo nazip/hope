@@ -98,4 +98,24 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH #update' do
+    sign_in_user
+
+    it 'assign question to var question' do
+      patch :update, id: question[0], question: attributes_for(:question), format: :js
+      expect(assigns(:question)).to eq question[0]
+    end
+
+    it "update question's body" do
+      patch :update, id: question[0], question: { body: 'New question body' }, format: :js
+      assigns(:question).reload
+      expect(assigns(:question).body).to eq 'New question body'
+    end
+
+    it "render update's template" do
+      patch :update, id: question[0], question: attributes_for(:question), format: :js
+      expect(response).to render_template :update
+    end
+  end
 end

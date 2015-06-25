@@ -54,7 +54,8 @@ group :test do
   gem 'capybara'
   gem 'launchy'
   gem 'database_cleaner'
-  gem 'selenium-webdriver'
+  # gem 'selenium-webdriver'
+  gem 'capybara-webkit'
 end
 
 gem 'bundler', '>= 1.8.4'

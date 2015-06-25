@@ -3,8 +3,7 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
   let!(:user) { create(:user) }
   let!(:question) { create(:question, user: user) }
-  let!(:answer) { create(:answer, question: question, user: user) }
-  # let(:question) { create(:question) }
+  let!(:answer) { create(:answer, best: false, question: question, user: user) }
 
   describe 'GET #destroy' do
     context 'user can delete his answer' do
@@ -12,23 +11,17 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'delete from the table answer' do
         expect do
-          delete :destroy, id: answer, question_id: question
+          delete :destroy, id: answer, question_id: question, format: :js
         end.to change(Answer, :count).by(-1)
-      end
-      it 'render the questions#index' do
-        delete :destroy, id: answer, question_id: question
-        expect(response).to redirect_to root_path
       end
     end
     context 'user can not delete the answer owned by other user' do
       sign_in_user
 
       it 'do not delete from the table answer' do
-        expect { delete :destroy, id: answer, question_id: question }.to_not change(Answer, :count)
-      end
-      it 'render the questions#index' do
-        delete :destroy, id: answer, question_id: question
-        expect(response).to redirect_to root_path
+        expect do
+          delete :destroy, id: answer, question_id: question, format: :js
+        end.to_not change(Answer, :count)
       end
     end
   end
@@ -51,6 +44,31 @@ RSpec.describe AnswersController, type: :controller do
       it 'render the log_in view' do
         expect(response).to redirect_to :user_session
       end
+    end
+  end
+
+  describe 'PATCH #update' do
+    sign_in_user
+
+    it 'assign new answer to var answer' do
+      patch :update, id: answer, question_id: question, answer: attributes_for(:answer), format: :js
+      expect(assigns(:answer)).to eq answer
+    end
+
+    it 'assign var question' do
+      patch :update, id: answer, question_id: question, answer: attributes_for(:answer), format: :js
+      expect(assigns(:question)).to eq question
+    end
+
+    it "update answer's body" do
+      patch :update, id: answer, question_id: question, answer: { body: 'New answer body' }, format: :js
+      answer.reload
+      expect(answer.body).to eq 'New answer body'
+    end
+
+    it "render update's template" do
+      patch :update, id: answer, question_id: question, answer: attributes_for(:answer), format: :js
+      expect(response).to render_template :update
     end
   end
 
@@ -80,6 +98,28 @@ RSpec.describe AnswersController, type: :controller do
       it 'render create template' do
         post :create, question_id: question, answer: attributes_for(:invalidanswer), format: :js
         expect(response).to render_template :create
+      end
+    end
+  end
+
+  describe 'POST #best' do
+    context 'authenticated user' do
+      sign_in_user
+
+      it 'update the best field' do
+        patch :best, question_id: question, id: answer, format: :js
+        expect(answer.reload.best).to eq true
+      end
+      it "render update's template" do
+        patch :best, question_id: question, id: answer, format: :js
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'non authenticated user' do
+      it 'can not update the best field' do
+        patch :best, question_id: question, id: answer, format: :js
+        expect(answer.reload.best).to eq false
       end
     end
   end

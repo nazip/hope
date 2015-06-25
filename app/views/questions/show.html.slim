@@ -13,6 +13,7 @@
   = form_for [@question, Answer.new], method: :post, remote: true do |f|
     = f.label 'Ваш ответ', class: 'text-error'
     br
+    .answer-errors
     = f.text_area :body, size: "60x12"
     br
     = f.submit "Создать", class: 'btn btn-primary'
