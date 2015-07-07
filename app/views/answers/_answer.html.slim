@@ -4,17 +4,30 @@
       - if answer.best == true
         =check_box_tag 'best-choice', answer.best, answer.best, disabled: true
         br
-      - if user_signed_in? and answer.question.user_id == current_user.id
-        - if answer.best
-          = link_to 'Убрать метку лучшего ответа', best_question_answer_path(answer.question, answer), id: answer.id,  method: :post, remote: true
-        - else
-          = link_to 'Пометить как лучший', best_question_answer_path(answer.question, answer), id: answer.id, method: :post, remote: true
-      - if user_signed_in? and answer.user_id == current_user.id
-        = link_to 'Удалить ответ', question_answer_path(answer.question_id, answer), remote: true, method: "delete", class: 'text-warning'
+      - if user_signed_in?
+        -if answer.question.user_id == current_user.id
+          - if answer.best
+            = link_to 'Убрать метку лучшего ответа', best_question_answer_path(answer.question, answer), id: answer.id,  method: :post, remote: true
+          - else
+            = link_to 'Пометить как лучший', best_question_answer_path(answer.question, answer), id: answer.id, method: :post, remote: true
+        - if answer.user_id == current_user.id
+          br
+          = link_to 'Удалить ответ', question_answer_path(answer.question_id, answer), remote: true, method: "delete", class: 'text-warning'
+          br
+          = link_to 'Редактировать ответ', '', class: 'edit-answer-link', data: { answer_id: answer.id }
+          br
+          = form_for [answer.question, answer], remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
+            = f.text_area :body
+            p
+            = f.submit 'Сохранить'
         br
-      - if user_signed_in? and answer.user_id == current_user.id
-        = link_to 'Редактировать ответ', '', class: 'edit-answer-link', data: { answer_id: answer.id }
-        = form_for [answer.question, answer], remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
-          = f.text_area :body
-          = f.submit 'Сохранить'
+      - if !answer.attachments.empty?
+        p Attachments:
+        ul
+          - answer.attachments.each do |a|
+            div class = "attachment-#{a.id}"
+              li= link_to a.file.identifier, a.file.url
+              - if user_signed_in? and answer.user_id == current_user.id
+                ul
+                  li= link_to "delete #{a.file.identifier}", question_answer_attachment_path(answer.question, answer, a), method: :delete, remote: true
       p= '===================================='

@@ -1,13 +1,16 @@
 Rails.application.routes.draw do
   devise_for :users
   resources :questions do
+    resources :attachments, only: :destroy
     # resources :answers, only: [:create, :new, :destroy, :update]
     resources :answers do
+      resources :attachments, only: :destroy
       member do
-        post "best"
+        post 'best'
       end
     end
   end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

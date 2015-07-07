@@ -3,6 +3,11 @@
   br
   = text_area_tag nil, @question.body
   br
+  p Attachments:
+  ul
+    - @question.attachments.each do |a|
+      li= link_to a.file.identifier, a.file.url
+  br
   - if not @question.answers.empty?
     = label_tag 'Ответы:', nil, class: 'text-success'
     br
@@ -10,12 +15,13 @@
     = render @question.answers
   hr
 
-  = form_for [@question, Answer.new], method: :post, remote: true do |f|
+  = form_for [@question, @answer], method: :post, remote: true do |f|
     = f.label 'Ваш ответ', class: 'text-error'
     br
     .answer-errors
     = f.text_area :body, size: "60x12"
-    br
+    .links
+      = link_to_add_association 'add attachment', f, :attachments
     = f.submit "Создать", class: 'btn btn-primary'
   = link_to 'Показать все вопросы', action: :index, class: "btn btn-info"
 

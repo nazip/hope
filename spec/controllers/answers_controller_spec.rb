@@ -34,6 +34,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'assign new answer to var answer' do
         expect(assigns(:answer)).to be_a_new(Answer)
       end
+
       it 'render new view' do
         expect(response).to render_template :new
       end
