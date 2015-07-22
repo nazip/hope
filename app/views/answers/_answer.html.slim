@@ -30,4 +30,19 @@
               - if user_signed_in? and answer.user_id == current_user.id
                 ul
                   li= link_to "delete #{a.file.identifier}", question_answer_attachment_path(answer.question, answer, a), method: :delete, remote: true
+      - if user_signed_in? and answer.user_id != current_user.id
+        div class = "links-Answer-#{answer.id}"
+          - if current_user.elect_for?(answer, -1)
+            = link_to 'like', question_answer_elects_path(question_id: answer.question, answer_id: answer, like: 1), method: :post, remote: true, data: {type: :json}, class: 'like'
+            br
+          - if current_user.elect_for?(answer, 1)
+            = link_to 'dislike', question_answer_elects_path(question_id: answer.question, answer_id: answer, like: -1), method: :post, remote: true, data: {type: :json}, class: 'like'
+            br
+          - if current_user.elect_for?(answer)
+            = link_to 'cancel', question_answer_elect_path(question_id: answer.question, answer_id: answer, id: answer.elects_id( current_user.id)), method: :delete, remote: true, data: {type: :json}, class: 'like'
+            br
+      .div class = "Answer-#{answer.id}"
+        'Рейтинг:
+        = answer.sum_elects
+      .div class = "Answer-error-#{answer.id}"
       p= '===================================='

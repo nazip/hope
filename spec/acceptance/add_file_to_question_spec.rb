@@ -16,7 +16,7 @@ feature 'add files to question', %q(
     click_on 'add attachment'
     click_on 'add attachment'
     all('.nested-fields').each do |a|
-      a.attach_file  'File', "#{Rails.root}/spec/spec_helper.rb"
+      a.attach_file 'File', "#{Rails.root}/spec/spec_helper.rb"
     end
 
     click_on 'Создать вопрос'

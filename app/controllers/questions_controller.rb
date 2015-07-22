@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index]
-  before_action :load_question, only: [:show, :edit, :destroy, :update, :delfile]
+  before_action :load_question, only: [:show, :edit, :destroy, :update, :elect]
 
   def index
     @questions = Question.all
@@ -14,9 +14,6 @@ class QuestionsController < ApplicationController
   def show
     @answer = @question.answers.build
     @answer.attachments.build
-  end
-
-  def edit
   end
 
   def destroy

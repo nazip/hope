@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe QuestionsController, type: :controller do
   let!(:user) { create(:user) }
   let!(:question) { create_list(:question, 2, user: user) }
+  let!(:user1) { create(:user) }
+  let!(:question1) { create(:question, user: user1) }
 
   describe 'GET #destroy' do
     context 'user can delete his question' do
@@ -25,7 +27,7 @@ RSpec.describe QuestionsController, type: :controller do
     before { get :index }
 
     it 'populate array of questions' do
-      expect(assigns(:questions)).to match_array(question)
+      expect(assigns(:questions).count).to eq 3
     end
     it 'render index view' do
       expect(response).to render_template :index

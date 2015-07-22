@@ -1,10 +1,16 @@
 Rails.application.routes.draw do
   devise_for :users
-  resources :questions do
+
+  concern :electable do
+    resources :elects, only: [:create, :destroy]
+  end
+
+  concern :attachable do
     resources :attachments, only: :destroy
-    # resources :answers, only: [:create, :new, :destroy, :update]
-    resources :answers do
-      resources :attachments, only: :destroy
+  end
+
+  resources :questions, concerns: [:electable, :attachable] do
+    resources :answers, concerns: [:electable, :attachable] do
       member do
         post 'best'
       end

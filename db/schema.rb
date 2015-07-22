@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150712170103) do
+ActiveRecord::Schema.define(version: 20150716200257) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,18 @@ ActiveRecord::Schema.define(version: 20150712170103) do
   end
 
   add_index "attachments", ["attachable_id", "attachable_type"], name: "index_attachments_on_attachable_id_and_attachable_type", using: :btree
+
+  create_table "elects", force: :cascade do |t|
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.integer  "electable_id"
+    t.string   "electable_type"
+    t.integer  "user_id"
+    t.integer  "election",       default: 0
+  end
+
+  add_index "elects", ["electable_id", "electable_type"], name: "index_elects_on_electable_id_and_electable_type", using: :btree
+  add_index "elects", ["user_id"], name: "index_elects_on_user_id", using: :btree
 
   create_table "questions", force: :cascade do |t|
     t.string   "title"
