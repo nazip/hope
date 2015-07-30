@@ -1,4 +1,4 @@
-.container
+div[class = "question container" data={id:"#{@question.id}"}]
   = label_tag 'Вопрос: ' + @question.title, nil, class: 'text-error'
   br
   = text_area_tag nil, @question.body
@@ -7,12 +7,13 @@
   ul
     - @question.attachments.each do |a|
       li= link_to a.file.identifier, a.file.url
+  =render 'comments/comment', commentable: @question, add_comment: true
   br
   - if not @question.answers.empty?
     = label_tag 'Ответы:', nil, class: 'text-success'
     br
   .answers
-    = render @question.answers
+    = render @question.answers, add_comment: true
   hr
 
   = form_for [@question, @answer], method: :post, remote: true do |f|
@@ -24,4 +25,5 @@
       = link_to_add_association 'add attachment', f, :attachments
     = f.submit "Создать", class: 'btn btn-primary'
   = link_to 'Показать все вопросы', action: :index, class: "btn btn-info"
-
+  = subscribe_to "/questions/#{@question.id}/answers"
+  = subscribe_to "/comments/question/#{@question.id}"

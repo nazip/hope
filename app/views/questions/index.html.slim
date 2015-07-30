@@ -4,10 +4,9 @@
   - else
       = link_to 'Создать сессию', 'users/sign_in', :method => :create,  class: 'btn btn-danger'
   hr
-  - @questions.each do |question|
-    .questions
+  .questions
+    - @questions.each do |question|
       = render question
-      = link_to 'Добавить ответ', question
-      hr
   br
   = link_to 'Создать вопрос', new_question_path, class: 'btn btn-primary'
+  = subscribe_to "/questions"

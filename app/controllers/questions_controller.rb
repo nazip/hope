@@ -29,6 +29,8 @@ class QuestionsController < ApplicationController
   def create
     @question = current_user.questions.new(question_params)
     if @question.save
+      PrivatePub.publish_to '/questions',
+      message: { obj: "#{render_to_string partial: 'question', object: @question, as: 'question'}" }
       redirect_to @question
     else
       render :new

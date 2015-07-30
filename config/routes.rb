@@ -5,18 +5,30 @@ Rails.application.routes.draw do
     resources :elects, only: [:create, :destroy]
   end
 
-  concern :attachable do
-    resources :attachments, only: :destroy
-  end
+  # concern :attachable do
+  #   resources :attachments, only: :destroy
+  # end
 
-  resources :questions, concerns: [:electable, :attachable] do
-    resources :answers, concerns: [:electable, :attachable] do
+  resources :questions, concerns: [:electable], shallow: true do
+    resources :comments, only: :create
+    resources :answers, concerns: [:electable] do
+      resources :comments, only: :create
       member do
-        post 'best'
+        patch 'best'
       end
     end
   end
 
+  resources :attachments, only: :destroy
+
+  # resources :comments
+
+  # post 'questions_answer'
+
+  # post 'comments/:id' => 'comments#add'
+  # resources :comments, only: [] do
+  #     post 'set', on: :member
+  # end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

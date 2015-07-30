@@ -18,7 +18,8 @@ div class = "question-#{question.id}"
           li= link_to a.file.identifier, a.file.url
           - if user_signed_in? and question.user_id == current_user.id
             ul
-              li= link_to "delete #{a.file.identifier}", question_attachment_path(question, a), method: :delete, remote: true
+              li= link_to "delete #{a.file.identifier}", attachment_path(question, a), method: :delete, remote: true
+  =render 'comments/comment', commentable: question
   - if user_signed_in? and question.user_id != current_user.id
     div class = "links-Question-#{question.id}"
       - if current_user.elect_for?(question, -1)
@@ -28,7 +29,7 @@ div class = "question-#{question.id}"
         = link_to 'dislike', question_elects_path(question_id: question, like: -1), method: :post, remote: true, data: {type: :json}, class: 'like'
         br
       - if current_user.elect_for?(question)
-        = link_to 'cancel', question_elect_path(question_id: question, id: question.elects_id(current_user.id) ), method: :delete, remote: true, data: {type: :json}, class: 'like'
+        = link_to 'cancel', elect_path(question_id: question, id: question.elects_id(current_user.id) ), method: :delete, remote: true, data: {type: :json}, class: 'like'
         br
   div class = "Question-#{question.id}"
     = 'Рейтинг: '
@@ -40,4 +41,6 @@ div class = "question-#{question.id}"
       = render question.answers
   - else
     p
+  = link_to 'Добавить ответ', question
+  hr
 

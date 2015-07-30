@@ -3,7 +3,9 @@
     $('.answer-errors').html('<%= j message %>');
   <% end %>
 <% else %>
-  $('.answers').append('<%= j render @answer %>');
+  <% publish_to "/questions/#{@answer.question.id}/answers" do %>
+    $('.answers').append('<%= j render @answer %>');
+  <% end %>
   $('#answer_body').val('');
   $('.edit-answer-link').click(function(e) {
     e.preventDefault();

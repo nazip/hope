@@ -1,6 +1,7 @@
 class Answer < ActiveRecord::Base
   include Electable
   include Attachable
+  include Commentable
   belongs_to :user
   belongs_to :question
   validates :body, :question_id, :user_id, presence: true

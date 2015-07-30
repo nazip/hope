@@ -1,6 +1,6 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :load_question, except: [:new]
+  before_action :load_question, except: [:new, :destroy, :update, :best]
   before_action :load_answer, except: [:create, :new]
 
   def new
@@ -40,7 +40,7 @@ class AnswersController < ApplicationController
     end
 
     def load_answer
-      @answer = @question.answers.find(params[:id])
+      @answer = Answer.find(params[:id])
     end
 
     def answer_params
