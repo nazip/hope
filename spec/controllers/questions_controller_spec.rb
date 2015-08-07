@@ -44,9 +44,9 @@ RSpec.describe QuestionsController, type: :controller do
     it 'create new answer for question' do
       expect(assigns(:answer)).to be_a_new(Answer)
     end
-    it 'assign new attachment for answer' do
-      expect(assigns(:answer).attachments.first).to be_a_new(Attachment)
-    end
+    # it 'assign new attachment for answer' do
+    #   expect(assigns(:answer).attachments.first).to be_a_new(Attachment)
+    # end
     it 'render the show action' do
       expect(response).to render_template :show
     end
@@ -60,9 +60,9 @@ RSpec.describe QuestionsController, type: :controller do
       it 'assign new question to var question' do
         expect(assigns(:question)).to be_a_new(Question)
       end
-      it 'assign new attachment for question' do
-        expect(assigns(:question).attachments.first).to be_a_new(Attachment)
-      end
+      # it 'assign new attachment for question' do
+      #   expect(assigns(:question).attachments.first).to be_a_new(Attachment)
+      # end
       it 'render new view' do
         expect(response).to render_template :new
       end
@@ -111,7 +111,7 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    sign_in_user
+    before {sign_in user}
 
     it 'assign question to var question' do
       patch :update, id: question[0], question: attributes_for(:question), format: :js
@@ -124,7 +124,7 @@ RSpec.describe QuestionsController, type: :controller do
       expect(assigns(:question).body).to eq 'New question body'
     end
 
-    it "render update's template" do
+    it "render update's template"  do
       patch :update, id: question[0], question: attributes_for(:question), format: :js
       expect(response).to render_template :update
     end

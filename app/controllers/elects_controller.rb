@@ -2,6 +2,8 @@ class ElectsController < ApplicationController
   before_action :authenticate_user!
   before_action :init_obj, only: [:create, :destroy]
 
+  # respond_to :json
+
   def create
     if @elect.electable.user_id != current_user.id
       @elect.election = params[:like]
@@ -16,6 +18,24 @@ class ElectsController < ApplicationController
     end
   end
 
+
+  # def create
+  #   @elect.election = params[:like]
+  #   if @elect.electable.user_id != current_user.id
+  #     respond_with @elect.save do |format|
+  #       format.json { render json: { likes: @elect.electable.elects.sum(:election),
+  #                                    obj: @elect,
+  #                                    action: params[:like] } }
+  #     end
+  #   else
+  #     respond_with do |format|
+  #       format.json {
+  #         render json: { obj: @elect, error_txt: 'you can not elect to your answer/question' }, status: 422
+  #       }
+  #     end
+  #   end
+  # end
+
   def destroy
     if @elect.new_record?
       render json: { obj: @elect, error_txt: 'answer/question does not exists' }, status: 422
@@ -28,6 +48,21 @@ class ElectsController < ApplicationController
                      action: 0 }
     end
   end
+
+
+  # def destroy
+  #   if @elect.new_record?
+  #     respond_with do |format|
+  #       format.json { render json: { obj: @elect, error_txt: 'answer/question does not exists' }, status: 422 }
+  #     end
+  #   else
+  #     respond_with @elect.delete do |format|
+  #       format.json { render json: { likes: @elect.electable.elects.sum(:election),
+  #                                    obj: @elect,
+  #                                    action: 0 }}
+  #     end
+  #   end
+  # end
 
   private
 

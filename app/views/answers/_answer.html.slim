@@ -29,7 +29,7 @@
               li= link_to a.file.identifier, a.file.url
               - if user_signed_in? and answer.user_id == current_user.id
                 ul
-                  li= link_to "delete #{a.file.identifier}", attachment_path(answer, a), method: :delete, remote: true
+                  li= link_to "delete #{a.file.identifier}", attachment_path(a), method: :delete, remote: true
       - if defined?(add_comment)
         =render 'comments/comment', commentable: answer, add_comment: true
       - else
@@ -43,7 +43,7 @@
             = link_to 'dislike', answer_elects_path(answer_id: answer, like: -1), method: :post, remote: true, data: {type: :json}, class: 'like'
             br
           - if current_user.elect_for?(answer)
-            = link_to 'cancel', answer_elect_path(answer_id: answer, id: answer.elects_id( current_user.id)), method: :delete, remote: true, data: {type: :json}, class: 'like'
+            = link_to 'cancel', elect_path(answer_id: answer, id: answer.elects_id( current_user.id)), method: :delete, remote: true, data: {type: :json}, class: 'like'
             br
       .div class = "Answer-#{answer.id}"
         'Рейтинг:

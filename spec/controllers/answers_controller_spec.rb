@@ -49,16 +49,11 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    sign_in_user
+    before { sign_in user }
 
     it 'assign new answer to var answer' do
       patch :update, id: answer, question_id: question, answer: attributes_for(:answer), format: :js
       expect(assigns(:answer)).to eq answer
-    end
-
-    it 'assign var question' do
-      patch :update, id: answer, question_id: question, answer: attributes_for(:answer), format: :js
-      expect(assigns(:question)).to eq question
     end
 
     it "update answer's body" do
@@ -105,7 +100,7 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'POST #best' do
     context 'authenticated user' do
-      sign_in_user
+      before { sign_in user }
 
       it 'update the best field' do
         patch :best, question_id: question, id: answer, format: :js

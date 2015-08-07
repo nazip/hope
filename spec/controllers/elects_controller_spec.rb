@@ -7,9 +7,7 @@ RSpec.describe ElectsController, type: :controller do
 
   describe 'POST #create' do
     context 'authenticated user can elect to other q/a' do
-      before do
-        sign_in user1
-      end
+      before { sign_in user1 }
 
       it 'save @elect' do
         expect do
