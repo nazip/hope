@@ -10,7 +10,7 @@ feature 'update question', %q(
 
   describe 'non authenticated user' do
     before do
-      visit questions_path(question)
+      visit questions_path
     end
 
     scenario 'user can not edit question', js: true do
@@ -21,7 +21,7 @@ feature 'update question', %q(
   describe 'authenticated user' do
     before do
       sign_in(user)
-      visit questions_path(question)
+      visit questions_path
     end
 
     scenario 'can edit his question', js: true do
@@ -38,7 +38,7 @@ feature 'update question', %q(
     scenario 'can not edit the question owned by other user', js: true do
       click_on 'Выход из сессии'
       sign_in user1
-      visit questions_path(question)
+      visit questions_path
 
       within ".question-#{question.id}" do
         expect(page).to_not have_link 'Редактировать вопрос'

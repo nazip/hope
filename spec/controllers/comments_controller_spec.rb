@@ -6,11 +6,11 @@ RSpec.describe CommentsController, type: :controller do
 
   describe 'POST #create' do
     context 'authenticated user can comment to q/a' do
-      sign_in_user
+      before { sign_in user }
 
       it 'save to the comment db' do
         expect do
-          post :create, question_id: question.id, user_id: user.id, comment: {body: 'new comment'}
+          post :create, controller: :comments, question_id: question.id, user_id: user.id, comment: {body: 'new comment'}
         end.to change(Comment, :count).by(1)
       end
     end

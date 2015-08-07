@@ -12,7 +12,7 @@ feature 'update best answer', %q(
 
   describe 'non authenticated user' do
     before do
-      visit questions_path(question)
+      visit questions_path
     end
 
     scenario 'can not check/uncheck an answer', js: true do
@@ -26,7 +26,7 @@ feature 'update best answer', %q(
   describe 'authenticated user' do
     before do
       sign_in(user)
-      visit questions_path(question)
+      visit questions_path
     end
 
     scenario 'question owner can check and uncheck an answer', js: true do
@@ -60,7 +60,7 @@ feature 'update best answer', %q(
     scenario 'can not check an answer (question owned by other user)', js: true do
       click_on 'Выход из сессии'
       sign_in user1
-      visit questions_path(question)
+      visit questions_path
 
       within ".answer-#{answer1.id}" do
         expect(page).to_not have_link 'Пометить как лучший'

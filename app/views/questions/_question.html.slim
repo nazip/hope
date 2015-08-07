@@ -18,7 +18,7 @@ div class = "question-#{question.id}"
           li= link_to a.file.identifier, a.file.url
           - if user_signed_in? and question.user_id == current_user.id
             ul
-              li= link_to "delete #{a.file.identifier}", attachment_path(question, a), method: :delete, remote: true
+              li= link_to "delete #{a.file.identifier}", attachment_path(a), method: :delete, remote: true
   =render 'comments/comment', commentable: question
   - if user_signed_in? and question.user_id != current_user.id
     div class = "links-Question-#{question.id}"
