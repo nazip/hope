@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, omniauth_providers: [:facebook]
 
   def elect_for? obj, *election
     if election.size == 0
@@ -14,5 +14,9 @@ class User < ActiveRecord::Base
     else
       self.elects.where(electable: obj, election: election[0]).count == 0
     end
+  end
+
+  def find_for_oauth
+
   end
 end
