@@ -41,6 +41,7 @@ gem 'thin'
 gem 'responders', '~> 2.0'
 gem 'omniauth'
 gem 'omniauth-facebook'
+gem 'omniauth-twitter'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -56,6 +57,8 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
 end
+
+gem "letter_opener", group: :development
 
 group :test do
   gem 'shoulda-matchers'
