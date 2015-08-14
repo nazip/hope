@@ -56,9 +56,9 @@ group :development, :test do
   gem 'spring'
   gem 'rspec-rails'
   gem 'factory_girl_rails'
+  gem 'capybara-email'
+  gem "letter_opener"
 end
-
-gem "letter_opener", group: :development
 
 group :test do
   gem 'shoulda-matchers'

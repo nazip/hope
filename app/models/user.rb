@@ -22,6 +22,7 @@ class User < ActiveRecord::Base
     return authorization.user if authorization
 
     email = auth.info[:email]
+    email ||= (0...5).map { ('a'..'z').to_a[rand(26)] }.join + '@' + (0...5).map { ('a'..'z').to_a[rand(26)] }.join + '.ru'
     user = User.where(email: email).first
     if user
       user.authorizations.create(provider: auth.provider, uid: auth.uid)
