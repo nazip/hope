@@ -2,14 +2,21 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     super
-    session[:oauth] = nil unless @user.new_record?
+    session[:oauth]['info']['email'] = @user.email
+    @user = User.find_for_oauth(session[:oauth])
+    if @user.persisted?
+      sign_in_and_redirect @user, event: :authentication
+      set_flash_message(:notice, :success, kind: session[:oauth].provider) if is_navigational_format?
+    end
   end
 
   private
   def build_resource(*args)
-binding.pry
     super
     if session[:oauth]
+      password = Devise.friendly_token[0, 20]
+      @user.password = password
+      @user.password_confirmation = password
       @user.apply_omniauth(session[:oauth])
       @user.valid?
     end

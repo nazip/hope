@@ -18,24 +18,22 @@ class User < ActiveRecord::Base
   end
 
   def self.find_for_oauth(auth)
-    authorization = Authorization.where(provider: auth.provider, uid: auth.uid).first;
+    authorization = Authorization.where(provider: auth['provider'], uid: auth['uid']).first;
     return authorization.user if authorization
 
-    if auth.info[:email].nil?
-      password = Devise.friendly_token[0, 20]
-      user = User.create(password: password, password_confirmation: password)
+    if auth['info']['email'].nil?
+      user = User.create
       user.apply_omniauth(auth)
       user
     else
-      email = auth.info[:email]
-      # email ||= (0...5).map { ('a'..'z').to_a[rand(26)] }.join + '@' + (0...5).map { ('a'..'z').to_a[rand(26)] }.join + '.ru'
+      email = auth['info']['email']
       user = User.where(email: email).first
       if user
-        user.authorizations.create(provider: auth.provider, uid: auth.uid)
+        user.authorizations.create(provider: auth['provider'], uid: auth['uid'])
       else
         password = Devise.friendly_token[0, 20]
         user = User.create!(email: email, password: password, password_confirmation: password)
-        user.authorizations.create(provider: auth.provider, uid: auth.uid)
+        user.authorizations.create(provider: auth['provider'], uid: auth['uid'])
       end
       user
     end
@@ -43,10 +41,5 @@ class User < ActiveRecord::Base
 
   def apply_omniauth(auth)
     authorizations.build(provider: auth['provider'], uid: auth['uid'])
-  end
-
-  def password_required?
-    (authorizations.empty? || !password.blank?) && super
-    # (false) && super
   end
 end
