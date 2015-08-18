@@ -1,16 +1,15 @@
 class RegistrationsController < Devise::RegistrationsController
 
   def create
-    super
-    session[:oauth]['info']['email'] = @user.email
-    @user = User.find_for_oauth(session[:oauth])
-    if @user.persisted?
+    if session[:oauth]
+      @user = User.find_for_oauth(session[:oauth], params[:user][:email])
       sign_in_and_redirect @user, event: :authentication
-      set_flash_message(:notice, :success, kind: session[:oauth].provider) if is_navigational_format?
+      set_flash_message(:notice, :success, kind: session[:oauth]['provider']) if is_navigational_format?
     end
   end
 
   private
+
   def build_resource(*args)
     super
     if session[:oauth]

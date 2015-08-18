@@ -31,14 +31,21 @@ RSpec.describe User, type: :model do
   describe '.find_for_oauth' do
     let!(:user) { create(:user) }
     let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456', info: { email: user.email }) }
+    let(:auth_twitter) { OmniAuth::AuthHash.new(provider: 'twitter', uid: '123456', info: { email: nil }) }
     context 'user authorized already (using facebook)' do
       it'return user' do
         user.authorizations.create(provider: 'facebook', uid: '123456')
         expect(User.find_for_oauth(auth)).to eq user
       end
     end
+    context 'user authorized already (using twitter)' do
+      it'return user' do
+        user.authorizations.create(provider: 'twitter', uid: '123456')
+        expect(User.find_for_oauth(auth_twitter)).to eq user
+      end
+    end
 
-    context 'user does not authorized ' do
+    context 'user does not authorized (facebook)' do
       context 'user already exists' do
         it 'does not create new user' do
           expect { User.find_for_oauth(auth) }.to_not change(User, :count)
@@ -73,6 +80,15 @@ RSpec.describe User, type: :model do
         it 'returns the user' do
           expect(User.find_for_oauth(auth)).to eq User.where(email: 'test@email.ru').first
         end
+      end
+    end
+
+    context 'user does not authorized (twitter)' do
+      it 'return builded user and authorization record' do
+        new_user = User.find_for_oauth(auth_twitter)
+        # expect(new_user).to be_a_new(User)
+        # expect(new_user.authorizations.count).to eq 1
+        expect(User.find_for_oauth(auth_twitter)).to be_a_new(User)
       end
     end
   end

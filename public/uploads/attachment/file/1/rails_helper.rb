@@ -57,4 +57,6 @@ RSpec.configure do |config|
   config.include Devise::TestHelpers, type: :controller
   config.extend ControllerMacros, type: :controller
   config.include AcceptanceHelper, type: :feature
+  config.include(OmniauthMacros)
 end
+OmniAuth.config.test_mode = true

@@ -17,10 +17,10 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.find_for_oauth(auth)
+  def self.find_for_oauth(auth, mail = nil)
     authorization = Authorization.where(provider: auth['provider'], uid: auth['uid']).first;
     return authorization.user if authorization
-
+    auth['info']['email'] = mail unless mail.nil?
     if auth['info']['email'].nil?
       user = User.create
       user.apply_omniauth(auth)
