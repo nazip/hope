@@ -23,8 +23,6 @@ class User < ActiveRecord::Base
     auth['info']['email'] = mail unless mail.nil?
     if auth['info']['email'].nil?
       user = User.create
-      # user.apply_omniauth(auth)
-      # user
     else
       email = auth['info']['email']
       user = User.where(email: email).first
