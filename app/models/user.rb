@@ -23,8 +23,8 @@ class User < ActiveRecord::Base
     auth['info']['email'] = mail unless mail.nil?
     if auth['info']['email'].nil?
       user = User.create
-      user.apply_omniauth(auth)
-      user
+      # user.apply_omniauth(auth)
+      # user
     else
       email = auth['info']['email']
       user = User.where(email: email).first
@@ -42,4 +42,8 @@ class User < ActiveRecord::Base
   def apply_omniauth(auth)
     authorizations.build(provider: auth['provider'], uid: auth['uid'])
   end
+
+  # def password_required?
+  #   (authorizations.empty? || !password.blank?) && super
+  # end
 end
