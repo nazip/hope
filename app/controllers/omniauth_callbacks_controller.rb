@@ -4,7 +4,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def twitter
   end
 
-  def facefook
+  def facebook
   end
 
   private
@@ -16,7 +16,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       sign_in_and_redirect @user, event: :authentication
       set_flash_message(:notice, :success, kind: request.env['omniauth.auth'].provider) if is_navigational_format?
     else
-      redirect_to new_user_registration_path
+      redirect_to new_user_registration_path, resource: @user
     end
   end
 end

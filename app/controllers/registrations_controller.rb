@@ -1,13 +1,14 @@
 class RegistrationsController < Devise::RegistrationsController
 
+
+
   def create
+    super
     if session[:oauth]
       @user = User.find_for_oauth(session[:oauth], params[:user][:email])
-      sign_in_and_redirect @user, event: :authentication
-      set_flash_message(:notice, :success, kind: session[:oauth]['provider']) if is_navigational_format?
+      # sign_in_and_redirect @user, event: :authentication
+      # set_flash_message(:notice, :success, kind: session[:oauth]['provider']) if is_navigational_format?
       session[:oauth] = nil
-    else
-      super
     end
   end
 
@@ -20,7 +21,7 @@ class RegistrationsController < Devise::RegistrationsController
       @user.password = password
       @user.password_confirmation = password
       @user.apply_omniauth(session[:oauth])
-      @user.valid?
+      # @user.valid?
     end
   end
 end

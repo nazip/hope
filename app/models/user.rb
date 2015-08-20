@@ -27,6 +27,7 @@ class User < ActiveRecord::Base
     if auth['info']['email'].nil?
       user = User.create
       user.apply_omniauth(auth)
+      user
     else
       email = auth['info']['email']
       user = User.where(email: email).first
@@ -60,16 +61,16 @@ class User < ActiveRecord::Base
   #   (authorizations.empty? || !password.blank?) && super
   # end
 
-  private
+  protected
 
   def confirmation_required?
-binding.pry
+# binding.pry
     if self.authorizations.empty?
       skip_confirmation_notification!
       self.skip_confirmation!
       true
     else
-      !confirmed?
+      super
     end
   end
 end
