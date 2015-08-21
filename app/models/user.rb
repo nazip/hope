@@ -8,9 +8,6 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, omniauth_providers: [:facebook, :twitter]
-  # after_create :confirm_your_type_user_without_confirmation_email
-
-
 
   def elect_for? obj, *election
     if election.size == 0
@@ -46,25 +43,9 @@ class User < ActiveRecord::Base
     authorizations.build(provider: auth['provider'], uid: auth['uid'])
   end
 
-  # def confirm_your_type_user_without_confirmation_email
-  #      # check your condition here and process the following
-  #      self.skip_confirmation!
-  #      # self.confirm!
-  #      # condition may end here
-  # end
-
-  # def after_confirmation
-    # render 'questions/index'
-  # end
-
-  # def password_required?
-  #   (authorizations.empty? || !password.blank?) && super
-  # end
-
   protected
 
   def confirmation_required?
-# binding.pry
     if self.authorizations.empty?
       skip_confirmation_notification!
       self.skip_confirmation!
