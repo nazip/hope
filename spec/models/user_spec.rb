@@ -9,7 +9,6 @@ RSpec.describe User, type: :model do
   it { should have_many(:elects) }
   it { should have_many(:authorizations) }
 
-
   describe '#elect_for?' do
     let!(:user) { create(:user) }
     let!(:user1) { create(:user) }

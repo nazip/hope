@@ -8,7 +8,6 @@ feature 'election', %q(
   given!(:question) { create(:question, user: user) }
   given!(:elect) { create(:elect, electable_id: question.id, electable_type: 'Question', election: 1, user_id: user.id) }
 
-
   describe 'autenticated user' do
 
     context 'q/a owned by other user' do

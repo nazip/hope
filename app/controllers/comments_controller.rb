@@ -7,7 +7,7 @@ class CommentsController < ApplicationController
     respond_with @comment = Comment.create(body: params[:comment][:body],
                            commentable: @obj,
                            user_id: current_user.id) do |format|
-      format.html {render nothing: true}
+      format.html { render nothing: true }
     end
   end
 
