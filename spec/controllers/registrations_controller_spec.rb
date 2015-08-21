@@ -10,6 +10,7 @@ RSpec.describe RegistrationsController, type: :controller do
     before do
       session['oauth'] = oauth
       @request.env["devise.mapping"] = Devise.mappings[:user]
+      request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter]
     end
 
     context 'user exist' do
@@ -21,6 +22,11 @@ RSpec.describe RegistrationsController, type: :controller do
       it 'do not create the new user' do
         expect { post :create, user: {email: user.email } }.to_not change(User, :count)
       end
+      it 'do not send email' do
+        expect do
+          post :create, user: {email: user.email }
+        end.to_not change(ActionMailer::Base.deliveries, :count)
+      end
     end
 
     context 'user does not exist' do
@@ -29,6 +35,11 @@ RSpec.describe RegistrationsController, type: :controller do
       end
       it 'create new user' do
         expect { post :create, user: {email: 'other@email.ru' } }.to change(User, :count).by(1)
+      end
+      it 'send email' do
+        expect do
+          post :create, user: {email: 'other@email.ru' }
+        end.to change(ActionMailer::Base.deliveries, :count).by(1)
       end
     end
   end
