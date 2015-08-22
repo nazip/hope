@@ -18,7 +18,6 @@ class ElectsController < ApplicationController
     end
   end
 
-
   # def create
   #   @elect.election = params[:like]
   #   if @elect.electable.user_id != current_user.id
@@ -48,7 +47,6 @@ class ElectsController < ApplicationController
                      action: 0 }
     end
   end
-
 
   # def destroy
   #   if @elect.new_record?

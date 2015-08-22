@@ -26,7 +26,7 @@ class AnswersController < ApplicationController
 
   def best
     respond_with @answer.update_best do |format|
-      format.js {render :update}
+      format.js { render :update }
     end
   end
 

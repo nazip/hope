@@ -111,7 +111,7 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    before {sign_in user}
+    before { sign_in user }
 
     it 'assign question to var question' do
       patch :update, id: question[0], question: attributes_for(:question), format: :js

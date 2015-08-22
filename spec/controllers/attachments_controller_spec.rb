@@ -8,7 +8,6 @@ RSpec.describe AttachmentsController, type: :controller do
   let!(:attachment_answer) { create(:attachment, attachable: answer) }
   let!(:user1) { create(:user) }
 
-
   describe 'GET #destroy' do
     context 'question owner' do
       before { sign_in user }
