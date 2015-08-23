@@ -4,7 +4,7 @@ div[class = "#{commentable.class.name.downcase}-comments-#{commentable.id}"]
     - if !commentable.comments.empty?
       - commentable.comments.each do |a|
         li= a.body
-  - if user_signed_in? and defined?(add_comment)
+  - if policy(Comment.new()).create? and defined?(add_comment)
     = link_to 'add comment', '', class: 'add-comment-link', data: { id: commentable.id }
     br
     = form_for [commentable, Comment.new], remote: true, html: { id: "comment-#{commentable.id}", class: 'add-comment' }, method: :post  do |f|

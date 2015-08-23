@@ -4,6 +4,7 @@ class CommentsController < ApplicationController
   after_action :publish_message, only: :create
 
   def create
+    authorize Comment.new(commentable: @obj)
     respond_with @comment = Comment.create(body: params[:comment][:body],
                            commentable: @obj,
                            user_id: current_user.id) do |format|

@@ -4,6 +4,7 @@ require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'capybara/email/rspec'
+require 'pundit/rspec'
 
 OmniAuth.config.test_mode = true
 

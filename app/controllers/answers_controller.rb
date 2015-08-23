@@ -1,42 +1,40 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :load_question, except: [:new, :destroy, :update, :best]
+  before_action :load_question, only: :create
   before_action :load_answer, except: [:create, :new]
   before_action :load_new_answer, only: :create
-  before_action :test_user, only: [:destroy, :update]
 
   respond_to :js, only: [:update, :destroy, :create]
   respond_to :json, only: :best
 
   def new
+    authorize Answer.new
     respond_with(@answer = Answer.new)
   end
 
   def create
+    authorize Answer.new
     respond_with(@answer.save)
   end
 
   def destroy
+    authorize @answer
     respond_with(@answer.destroy)
   end
 
   def update
+    authorize @answer
     respond_with(@answer.update(answer_params))
   end
 
   def best
+    authorize @answer
     respond_with @answer.update_best do |format|
       format.js { render :update }
     end
   end
 
   private
-
-    def test_user
-      return if @answer.user_id == current_user.id
-      flash[:notice] = 'You have not permition for this operation'
-      redirect_to root_path
-    end
 
     def load_new_answer
       @answer = @question.answers.new(answer_params)

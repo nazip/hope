@@ -4,37 +4,37 @@
       - if answer.best == true
         =check_box_tag 'best-choice', answer.best, answer.best, disabled: true
         br
-      - if user_signed_in?
-        -if answer.question.user_id == current_user.id
-          - if answer.best
-            = link_to 'Убрать метку лучшего ответа', best_answer_path(answer), id: answer.id,  method: :patch, remote: true
-          - else
-            = link_to 'Пометить как лучший', best_answer_path(answer), id: answer.id, method: :patch, remote: true
-        - if answer.user_id == current_user.id
-          br
-          = link_to 'Удалить ответ', answer_path(answer), remote: true, method: "delete", class: 'text-warning'
-          br
-          = link_to 'Редактировать ответ', '', class: 'edit-answer-link', data: { answer_id: answer.id }
-          br
-          = form_for [answer], remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
-            = f.text_area :body
-            p
-            = f.submit 'Сохранить'
+      -if policy(answer).best?
+        - if answer.best
+          = link_to 'Убрать метку лучшего ответа', best_answer_path(answer), id: answer.id,  method: :patch, remote: true
+        - else
+          = link_to 'Пометить как лучший', best_answer_path(answer), id: answer.id, method: :patch, remote: true
+      - if policy(answer).destroy?
         br
+        = link_to 'Удалить ответ', answer_path(answer), remote: true, method: "delete", class: 'text-warning'
+      - if policy(answer).update?
+        br
+        = link_to 'Редактировать ответ', '', class: 'edit-answer-link', data: { answer_id: answer.id }
+        br
+        = form_for [answer], remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
+          = f.text_area :body
+          p
+          = f.submit 'Сохранить'
+      br
       - if !answer.attachments.empty?
         p Attachments:
         ul
           - answer.attachments.each do |a|
             div class = "attachment-#{a.id}"
               li= link_to a.file.identifier, a.file.url
-              - if user_signed_in? and answer.user_id == current_user.id
+              - if policy(Attachment.new(attachable: answer)).destroy?
                 ul
                   li= link_to "delete #{a.file.identifier}", attachment_path(a), method: :delete, remote: true
       - if defined?(add_comment)
         =render 'comments/comment', commentable: answer, add_comment: true
       - else
         =render 'comments/comment', commentable: answer
-      - if user_signed_in? and answer.user_id != current_user.id
+      - if policy(Elect.new(electable: answer)).create?
         div class = "links-Answer-#{answer.id}"
           - if current_user.elect_for?(answer, -1)
             = link_to 'like', answer_elects_path(answer_id: answer, like: 1), method: :post, remote: true, data: {type: :json}, class: 'like'
@@ -42,7 +42,7 @@
           - if current_user.elect_for?(answer, 1)
             = link_to 'dislike', answer_elects_path(answer_id: answer, like: -1), method: :post, remote: true, data: {type: :json}, class: 'like'
             br
-          - if current_user.elect_for?(answer)
+          - if current_user.elect_for?(answer) and policy(Elect.new(electable: answer)).destroy?
             = link_to 'cancel', elect_path(answer_id: answer, id: answer.elects_id( current_user.id)), method: :delete, remote: true, data: {type: :json}, class: 'like'
             br
       .div class = "Answer-#{answer.id}"
@@ -50,3 +50,4 @@
         = answer.sum_elects
       .div class = "Answer-error-#{answer.id}"
       p= '===================================='
+
