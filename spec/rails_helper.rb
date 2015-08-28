@@ -59,5 +59,6 @@ RSpec.configure do |config|
   config.extend ControllerMacros, type: :controller
   config.include AcceptanceHelper, type: :feature
   config.include(OmniauthMacros)
+  config.include JsonSpec::Helpers
 end
 OmniAuth.config.test_mode = true
