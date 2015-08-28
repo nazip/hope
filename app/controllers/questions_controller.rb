@@ -1,8 +1,8 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index]
-  before_action :load_question, only: [:show, :edit, :destroy, :update, :elect]
-  before_action :test_user, only: [:destroy, :update]
+  before_action :load_question, only: [:show, :destroy, :update]
   after_action :publish_message, only: :create
+  before_action :pundit_authorize, only: [:index, :new, :create]
 
   respond_to :js, only: :update
 
@@ -33,10 +33,8 @@ class QuestionsController < ApplicationController
 
   private
 
-  def test_user
-    return if @question.user_id == current_user.id
-    flash[:notice] = 'You have not permition for this operation'
-    redirect_to root_path
+  def pundit_authorize
+    authorize Question.new
   end
 
   def publish_message
@@ -50,5 +48,6 @@ class QuestionsController < ApplicationController
 
   def load_question
     @question = Question.find(params[:id])
+    authorize @question
   end
 end
