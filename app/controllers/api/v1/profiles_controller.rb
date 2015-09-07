@@ -1,30 +1,17 @@
-class Api::V1::ProfilesController < ApplicationController
-  before_action :doorkeeper_authorize!
-  before_action :load_user #, only: :me
-
-  respond_to :json
+class Api::V1::ProfilesController < Api::V1::BaseController
+  before_action :load_user
 
   def me
-    respond_with current_resource_owner
+    respond_with current_user
   end
 
   def index
-    respond_with User.where.not(id: doorkeeper_token.resource_owner_id) if doorkeeper_token
-    # @user_list = policy_scope(User.all) if doorkeeper_token
-    # authorize  @user_list
-    # respond_with policy_scope(User.all) if doorkeeper_token  #  User.where.not(id: doorkeeper_token.resource_owner_id) if doorkeeper_token
+    respond_with User.where.not(id: current_user.id)
   end
 
   private
 
   def load_user
-    @user = User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
-    authorize @user
+    authorize current_user
   end
-
-  def current_resource_owner
-    @current_resource_owner ||= User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
-  end
-
-  alias_method :current_user, :current_resource_owner
  end

@@ -29,4 +29,8 @@ class QuestionPolicy < ApplicationPolicy
   def update?
     owner?
   end
+
+  def answers?
+    has_user?
+  end
 end

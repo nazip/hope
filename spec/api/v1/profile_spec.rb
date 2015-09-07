@@ -64,19 +64,19 @@ describe 'Profile API' do
       end
 
       it 'return users except authonticated user' do
-        expect(response.body).to include_json({ email: other_user.email }.to_json)
-        expect(response.body).to_not include_json({ email: user.email }.to_json)
+        expect(response.body).to be_json_eql(other_user.send('email').to_json).at_path("profiles/0/email")
+        expect(response.body).to_not be_json_eql(user.send('email').to_json).at_path("profiles/0/email")
       end
 
       %w(id email updated_at created_at).each do |attr|
         it "contain other_user's #{attr} " do
-          expect(response.body).to be_json_eql(other_user.send(attr).to_json).at_path("0/#{attr}")
+          expect(response.body).to be_json_eql(other_user.send(attr).to_json).at_path("profiles/0/#{attr}")
         end
       end
 
       %w(password encrypted_password).each do |attr|
         it "doesn't contain #{attr}" do
-          expect(response.body).to_not have_json_path("0/#{attr}")
+          expect(response.body).to_not have_json_path("profiles/0/#{attr}")
         end
       end
     end
