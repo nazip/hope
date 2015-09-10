@@ -9,38 +9,17 @@ RSpec.describe AttachmentsController, type: :controller do
   let!(:user1) { create(:user) }
 
   describe 'GET #destroy' do
+
+    let(:obj) {attachment_question}
     context 'question owner' do
       before { sign_in user }
-
-      it 'deletes attachment' do
-        expect do
-          delete :destroy,
-                 id: attachment_question,
-                 question_id: question,
-                 format: :js
-        end.to change(Attachment, :count).by(-1)
-      end
-      it 'render the template destroy' do
-        delete :destroy, id: attachment_question, question_id: question, format: :js
-        expect(response).to render_template 'attachments/destroy'
-      end
+      it_behaves_like 'GET #destroy attachment'
     end
+
+    let(:obj) {attachment_answer}
     context 'answer owner' do
       before { sign_in user }
-
-      it 'deletes attachment' do
-        expect do
-          delete :destroy,
-                 id: attachment_answer,
-                 question_id: question,
-                 answer_id: answer,
-                 format: :js
-        end.to change(Attachment, :count).by(-1)
-      end
-      it 'render the template destroy' do
-        delete :destroy, id: attachment_answer, question_id: question, answer_id: answer, format: :js
-        expect(response).to render_template 'attachments/destroy'
-      end
+      it_behaves_like 'GET #destroy attachment'
     end
 
     context 'other user' do
@@ -48,22 +27,18 @@ RSpec.describe AttachmentsController, type: :controller do
 
       it 'can not delete an attachment (question)' do
         expect do
-          delete :destroy,
-                 id: attachment_question,
-                 question_id: question,
-                 format: :js
+          obj_path
         end.to_not change(Attachment, :count)
       end
 
       it 'can not delete an attachment (answer)' do
         expect do
-          delete :destroy,
-                 id: attachment_answer,
-                 question_id: question,
-                 answer_id: answer,
-                 format: :js
+          obj_path({answer_id: answer})
         end.to_not change(Attachment, :count)
       end
     end
+  end
+  def obj_path(option={})
+    delete :destroy, {id: attachment_question, question_id: question, format: :js}.merge(option)
   end
 end

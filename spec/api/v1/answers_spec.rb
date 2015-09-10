@@ -4,18 +4,9 @@ describe 'Answers API' do
 
   describe 'GET /show' do
 
-    context 'unauthorized' do
-      let!(:question) { create(:question) }
-      let!(:answer) { create(:answer, question: question) }
-      it 'without token -> return 401' do
-        get "/api/v1/answers/#{answer.id}", format: :json
-        expect(response.status).to eq 401
-      end
-      it 'invalid token -> return 401' do
-        get "/api/v1/answers/#{answer.id}", format: :json, access_token: '111'
-        expect(response.status).to eq 401
-      end
-    end
+    let!(:answer) { create(:answer, question: create(:question)) }
+    let(:http_req) {"/api/v1/answers/#{answer.id}" }
+    it_behaves_like "API Authenticable"
 
     context 'authorized' do
       let!(:user) { create(:user) }
@@ -26,9 +17,7 @@ describe 'Answers API' do
 
       before { get "/api/v1/answers/#{answer.id}", format: :json, access_token: access_token.token }
 
-      it 'return 200' do
-        expect(response).to be_success
-      end
+      it_behaves_like 'should return success'
 
       %w(id body created_at updated_at).each do |attr|
         it "answer has: #{attr} " do
@@ -52,29 +41,18 @@ describe 'Answers API' do
 
   describe 'GET /create' do
 
-    context 'unauthorized' do
-      let!(:question) { create(:question) }
-      it 'without token -> return 401' do
-        post "/api/v1/questions/#{question.id}/answers", format: :json
-        expect(response.status).to eq 401
-      end
-      it 'invalid token -> return 401' do
-        post "/api/v1/questions/#{question.id}/answers", format: :json, access_token: '111'
-        expect(response.status).to eq 401
-      end
-    end
+    let!(:question) { create(:question) }
+    let(:http_req) { "/api/v1/questions/#{question.id}/answers" }
+    it_behaves_like "API Authenticable"
 
     context 'authorized' do
       let!(:user) { create(:user) }
       let!(:question) { create(:question) }
       let(:access_token) { create(:access_token, resource_owner_id: user.id) }
 
-      # before { post "/api/v1/questions/#{question.id}/answers", format: :json, answer: {body: 'new answer'}, access_token: access_token.token }
+      before { post "/api/v1/questions/#{question.id}/answers", format: :json, answer: {body: 'new answer'}, access_token: access_token.token }
 
-      it 'return 200' do
-        post "/api/v1/questions/#{question.id}/answers", format: :json, answer: {body: 'new answer'}, access_token: access_token.token
-        expect(response).to be_success
-      end
+      it_behaves_like 'should return success'
 
       it 'answer saved with same attr' do
         expect do
@@ -83,5 +61,8 @@ describe 'Answers API' do
         expect(Answer.first.body).to eq 'new answer'
       end
     end
+  end
+  def do_request(options={})
+    get http_req, {format: :json}.merge(options)
   end
 end
