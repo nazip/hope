@@ -2,17 +2,9 @@ require 'rails_helper'
 
 describe 'Profile API' do
   describe 'GET /me' do
-    context 'unauthorized' do
-      it 'returns 401 status if there is no access_token' do
-        get '/api/v1/profiles/me', format: :json
-        expect(response.status).to eq 401
-      end
 
-      it 'returns 401 status if access_token is invalid' do
-        get '/api/v1/profiles/me', format: :json, access_token: '1234'
-        expect(response.status).to eq 401
-      end
-    end
+    let(:http_req) { '/api/v1/profiles/me' }
+    it_behaves_like "API Authenticable"
 
     context 'authorized' do
       let(:me) { create(:user) }
@@ -20,9 +12,7 @@ describe 'Profile API' do
 
       before { get '/api/v1/profiles/me', format: :json, access_token: access_token.token  }
 
-      it 'return 200' do
-        expect(response).to be_success
-      end
+      it_behaves_like 'should return success'
 
       %w(email id updated_at created_at).each do |attr|
         it "contain #{attr}" do
@@ -40,16 +30,8 @@ describe 'Profile API' do
 
   describe 'GET /index' do
 
-    context 'unauthorized' do
-      it 'without token -> return 401' do
-        get '/api/v1/profiles', format: :json
-        expect(response.status).to eq 401
-      end
-      it 'invalid token -> return 401' do
-        get '/api/v1/profiles', format: :json, access_token: '111'
-        expect(response.status).to eq 401
-      end
-    end
+    let(:http_req) { '/api/v1/profiles' }
+    it_behaves_like "API Authenticable"
 
     context 'authorized' do
       let!(:user) { create(:user) }
@@ -59,9 +41,7 @@ describe 'Profile API' do
 
       before { get '/api/v1/profiles', format: :json, access_token: access_token.token }
 
-      it 'return 200' do
-        expect(response).to be_success
-      end
+      it_behaves_like 'should return success'
 
       it 'return users except authonticated user' do
         expect(response.body).to be_json_eql(other_user.send('email').to_json).at_path("profiles/0/email")
@@ -80,5 +60,8 @@ describe 'Profile API' do
         end
       end
     end
+  end
+  def do_request(options={})
+    get http_req, {format: :json}.merge(options)
   end
 end

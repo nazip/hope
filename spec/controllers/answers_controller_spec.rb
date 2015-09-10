@@ -5,68 +5,10 @@ RSpec.describe AnswersController, type: :controller do
   let!(:question) { create(:question, user: user) }
   let!(:answer) { create(:answer, best: false, question: question, user: user) }
 
-  describe 'GET #destroy' do
-    context 'user can delete his answer' do
-      before { sign_in user }
-
-      it 'delete from the table answer' do
-        expect do
-          delete :destroy, id: answer, question_id: question, format: :js
-        end.to change(Answer, :count).by(-1)
-      end
-    end
-    context 'user can not delete the answer owned by other user' do
-      sign_in_user
-
-      it 'do not delete from the table answer' do
-        expect do
-          delete :destroy, id: answer, question_id: question, format: :js
-        end.to_not change(Answer, :count)
-      end
-    end
-  end
-
-  describe 'GET #new' do
-    context 'authenticated user can create answer' do
-      sign_in_user
-      before { get :new, id: answer, question_id: question  }
-
-      it 'assign new answer to var answer' do
-        expect(assigns(:answer)).to be_a_new(Answer)
-      end
-
-      it 'render new view' do
-        expect(response).to render_template :new
-      end
-    end
-    context 'non authenticated user can NOT create answer' do
-      before { get :new, id: answer, question_id: question  }
-
-      it 'render the log_in view' do
-        expect(response).to redirect_to :user_session
-      end
-    end
-  end
-
-  describe 'PATCH #update' do
-    before { sign_in user }
-
-    it 'assign new answer to var answer' do
-      patch :update, id: answer, question_id: question, answer: attributes_for(:answer), format: :js
-      expect(assigns(:answer)).to eq answer
-    end
-
-    it "update answer's body" do
-      patch :update, id: answer, question_id: question, answer: { body: 'New answer body' }, format: :js
-      answer.reload
-      expect(answer.body).to eq 'New answer body'
-    end
-
-    it "render update's template" do
-      patch :update, id: answer, question_id: question, answer: attributes_for(:answer), format: :js
-      expect(response).to render_template :update
-    end
-  end
+  let(:obj) {answer}
+  it_behaves_like 'GET #destroy'
+  it_behaves_like 'GET #new'
+  it_behaves_like 'PATCH #update'
 
   describe 'POST #create' do
     sign_in_user
@@ -118,5 +60,14 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer.reload.best).to eq false
       end
     end
+  end
+  def destroy_path
+    delete :destroy, id: answer, question_id: question, format: :js
+  end
+  def new_path
+    get :new, id: answer, question_id: question
+  end
+  def update_path(option)
+    patch :update, id: answer, question_id: question, answer: option, format: :js
   end
 end

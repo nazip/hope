@@ -12,18 +12,6 @@ class ElectsController < ApplicationController
                    likes: @elect.electable.elects.sum(:election),
                    obj: @elect,
                    action: params[:like] }
-
-    # if @elect.electable.user_id != current_user.id
-    #   @elect.election = params[:like]
-    #   @elect.save
-    #   render json: { q_id: params[:question_id],
-    #                  a_id: params.key?(:answer_id) ? params[:answer_id] : nil,
-    #                  likes: @elect.electable.elects.sum(:election),
-    #                  obj: @elect,
-    #                  action: params[:like] }
-    # else
-    #   render json: { obj: @elect, error_txt: 'you can not elect to your answer/question' }, status: 422
-    # end
   end
 
   def destroy

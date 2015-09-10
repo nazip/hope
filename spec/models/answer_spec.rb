@@ -2,12 +2,10 @@ require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
   it { should belong_to :question }
-  it { should have_many(:attachments).dependent(:destroy) }
-  it { should have_many(:elects).dependent(:destroy) }
+  it_behaves_like 'common for q/a'
   it { should validate_presence_of :question_id }
   it { should validate_presence_of :user_id }
   it { should validate_presence_of :body }
-  it { should accept_nested_attributes_for :attachments }
 
   let!(:user) { create(:user) }
   let!(:user1) { create(:user) }

@@ -10,18 +10,16 @@ RSpec.describe ElectsController, type: :controller do
       before { sign_in user1 }
 
       it 'save @elect' do
-        expect do
-          post :create, question_id: question.id, like: 1, user_id: user1.id, format: :json
-        end.to change(question.elects, :count).by(1)
+        expect{ create_path(user1) }.to change(question.elects, :count).by(1)
       end
 
       it '@elect has the user_id of the assigned user' do
-        post :create, question_id: question.id, like: 1, user_id: user1.id, format: :json
+        create_path(user1)
         expect(assigns(:elect).user_id).to eq user1.id
       end
 
       it '@elect has the value of the election field = 1' do
-        post :create, question_id: question.id, like: 1, user_id: user1.id, format: :json
+        create_path(user1)
         expect(assigns(:elect).election).to eq 1
       end
     end
@@ -30,9 +28,7 @@ RSpec.describe ElectsController, type: :controller do
       before { sign_in user }
 
       it 'can not save @elect' do
-        expect do
-          post :create, question_id: question.id, like: 1, user_id: user.id, format: :json
-        end.to_not change(question.elects, :count)
+        expect{ create_path(user) }.to_not change(question.elects, :count)
       end
     end
 
@@ -44,9 +40,7 @@ RSpec.describe ElectsController, type: :controller do
       end
 
       it 'do not change the records number' do
-        expect do
-          post :create, question_id: question.id, like: 1, user_id: user.id, format: :json
-        end.to_not change(question.elects, :count)
+        expect{ create_path(user) }.to_not change(question.elects, :count)
       end
     end
   end
@@ -60,27 +54,25 @@ RSpec.describe ElectsController, type: :controller do
     context 'authenticated user' do
       it 'can delete his record' do
         sign_in user
-
-        expect do
-          post :destroy, question_id: question.id, id: @elect.id
-        end.to change(question.elects, :count).by(-1)
+        expect{ destroy_path }.to change(question.elects, :count).by(-1)
       end
 
       it 'can not delete other record' do
         sign_in user1
-
-        expect do
-          post :destroy, question_id: question.id, id: @elect.id
-        end.to_not change(question.elects, :count)
+        expect{ destroy_path }.to_not change(question.elects, :count)
       end
     end
 
     context 'non authenticated user' do
       it 'can not delete any record' do
-        expect do
-          post :destroy, question_id: question.id, id: @elect.id
-        end.to_not change(question.elects, :count)
+        expect{ destroy_path }.to_not change(question.elects, :count)
       end
     end
+  end
+  def create_path(user)
+    post :create, question_id: question.id, like: 1, user_id: user.id, format: :json
+  end
+  def destroy_path
+    post :destroy, question_id: question.id, id: @elect.id
   end
 end
