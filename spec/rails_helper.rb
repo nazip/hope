@@ -5,6 +5,9 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'capybara/email/rspec'
 require 'pundit/rspec'
+require 'sidekiq/testing'
+
+Sidekiq::Testing.fake!
 
 OmniAuth.config.test_mode = true
 

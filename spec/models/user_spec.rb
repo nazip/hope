@@ -6,6 +6,7 @@ RSpec.describe User, type: :model do
   it { should validate_presence_of :password_confirmation }
   it { should have_many(:questions).dependent(:destroy) }
   it { should have_many(:answers).dependent(:destroy) }
+  it { should have_many(:subscriptions).dependent(:destroy) }
   it { should have_many(:elects) }
   it { should have_many(:authorizations) }
 

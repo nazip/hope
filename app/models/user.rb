@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   has_many :answers, dependent: :destroy
   has_many :elects
   has_many :authorizations
+  has_many :subscriptions, dependent: :destroy
   validates :email, :password, :password_confirmation, presence: true
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -41,6 +42,10 @@ class User < ActiveRecord::Base
 
   def apply_omniauth(auth)
     authorizations.build(provider: auth['provider'], uid: auth['uid'])
+  end
+
+  def subscribed?(obj)
+    Subscription.where(user_id: self, subscriptionable: obj).exists?
   end
 
   protected

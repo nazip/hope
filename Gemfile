@@ -48,12 +48,26 @@ gem 'doorkeeper'
 gem 'active_model_serializers'
 gem 'oj'
 gem 'oj_mimic_json'
+gem 'whenever'
+gem 'sidekiq'
+# gem 'sidetiq'
+gem 'sinatra', '>= 1.3.0', require: nil
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug'
+  # gem 'byebug'
   gem 'pry-rails'
   gem 'pry-byebug'
+
+  # delete assets records from rails s log
+  gem 'quiet_assets'
+
+  # to format the error logs
+  gem "better_errors"
+  gem "binding_of_caller"
+
+  # for rails panel
+  gem 'meta_request'
 
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'

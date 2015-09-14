@@ -2,6 +2,8 @@ div class = "question-#{question.id}"
   = label_tag question.title, nil, class: 'text-info'
   br
   p= question.body
+  div class = "question-#{question.id}-subscribe"
+    =render 'subscriptions/subscription', question: question
   - if policy(question).destroy?
     = link_to 'Удалить вопрос', question_path(question), :method => :delete
     br

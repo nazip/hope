@@ -39,4 +39,28 @@ RSpec.describe Answer, type: :model do
       expect(answer.elects_id(user1.id)).to eq elect.id
     end
   end
+
+  describe "#answer_created" do
+    context 'on create' do
+      subject { build(:answer, question: question, user: user, body: 'some body') }
+
+      it 'send email to question owner' do
+        message_delivery = instance_double(ActionMailer::MessageDelivery)
+        expect(SendAnswer).to receive(:send_email).with(user, subject).and_return(message_delivery)
+        expect(message_delivery).to receive(:deliver_later)
+        subject.save!
+      end
+
+      it "send email to the question's subscriber" do
+        expect(SendAnswerToSubscribersJob).to receive(:perform_later).with(subject)
+        subject.save!
+      end
+    end
+    context 'on update' do
+      it 'do not send email' do
+        expect(SendAnswer).to_not receive(:send_email).with(user, subject)
+        answer.update(body: 'other body')
+      end
+    end
+  end
 end
