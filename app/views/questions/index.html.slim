@@ -3,6 +3,7 @@
       = link_to 'Выход из сессии', 'users/sign_out', :method => :delete,  class: 'btn btn-danger'
   - else
       = link_to 'Создать сессию', 'users/sign_in', :method => :create,  class: 'btn btn-danger'
+  = link_to 'Поиск', search_index_path,  class: 'btn btn-danger'
   hr
   .questions
     - @questions.each do |question|

@@ -1,0 +1,20 @@
+.search-request
+  = form_tag search_index_path, method: :get do
+    = label_tag(:query, "Search for:")
+    = text_field_tag(:query)
+    = radio_button_tag(:search, "question")
+    = label_tag(:question_search, "question")
+    = radio_button_tag(:search, "answer")
+    = label_tag(:answer_search, "answer")
+    = radio_button_tag(:search, "comment")
+    = label_tag(:comment_search, "comment")
+    = radio_button_tag(:search, "user")
+    = label_tag(:comment_search, "user")
+    = radio_button_tag(:search, "thinking_sphinx", checked: true)
+    = label_tag(:comment_search, "all")
+    = submit_tag 'Найти'
+.search-result
+  - if @search
+    - @search.each do |obj|
+      =render partial: "search/#{obj.class.name.downcase}", locals: {obj: obj}
+    = will_paginate
