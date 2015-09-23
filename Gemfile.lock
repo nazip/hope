@@ -157,6 +157,7 @@ GEM
     doorkeeper (3.0.0)
       railties (>= 3.2)
     dotenv (2.0.2)
+    dotenv-deployment (0.0.2)
     em-http-request (1.1.2)
       addressable (>= 2.3.4)
       cookiejar
@@ -458,6 +459,8 @@ DEPENDENCIES
   database_cleaner
   devise
   doorkeeper
+  dotenv
+  dotenv-deployment
   factory_girl_rails
   jbuilder (~> 2.0)
   jquery-rails
