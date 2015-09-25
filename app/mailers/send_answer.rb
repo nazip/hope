@@ -1,5 +1,5 @@
 class SendAnswer < ApplicationMailer
-  default from: "me@mail.ru"
+  default from: "nazipm@mail.ru"
 
   def send_email(user, answer)
     @answer = answer
