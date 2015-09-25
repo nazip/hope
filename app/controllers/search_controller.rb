@@ -1,4 +1,6 @@
 class SearchController < ApplicationController
+  skip_authorization_check
+
   def index
 # binding.pry
     @search = ThinkingSphinx.search params[:query], classes: [params[:search].classify.constantize] if ['question', 'answer', 'user', 'comment'].include?(params[:search])

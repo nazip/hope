@@ -88,7 +88,29 @@ namespace :sphinx do
     on roles(:app) do
       within current_path do
         with rails_env: fetch(:rails_env) do
-          execute 'ts:start'
+          execute :rake, 'ts:start'
+        end
+      end
+    end
+  end
+
+  desc 'Index Thinking sphinx'
+  task :index do
+    on roles(:app) do
+      within current_path do
+        with rails_env: fetch(:rails_env) do
+          execute :rake, 'ts:index'
+        end
+      end
+    end
+  end
+
+  desc 'Rebuild Thinking sphinx'
+  task :rebuild do
+    on roles(:app) do
+      within current_path do
+        with rails_env: fetch(:rails_env) do
+          execute :rake, 'ts:rebuild'
         end
       end
     end
