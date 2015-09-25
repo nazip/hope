@@ -82,4 +82,17 @@ namespace :private_pub do
   end
 end
 
+namespace :sphinx do
+  desc 'Start Thinking sphinx'
+  task :start do
+    on roles(:app) do
+      within current_path do
+        with rails_env: fetch(:rails_env) do
+          execute 'ts:start'
+        end
+      end
+    end
+  end
+end
+
 after 'deploy:restart', 'private_pub:restart'
