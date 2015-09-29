@@ -45,6 +45,22 @@ namespace :deploy do
     end
   end
 
+  desc 'Start application'
+  task :start do
+    on roles(:app), in: :sequence, wait: 5 do
+      # execute :touch, release_path.join('tmp/restart.txt')
+      invoke 'unicorn:start'
+    end
+  end
+
+  desc 'Stop application'
+  task :stop do
+    on roles(:app), in: :sequence, wait: 5 do
+      # execute :touch, release_path.join('tmp/restart.txt')
+      invoke 'unicorn:stop'
+    end
+  end
+
   after :publishing, :restart
 end
 
