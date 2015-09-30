@@ -7,7 +7,8 @@ class QuestionsController < ApplicationController
   respond_to :js, only: :update
 
   def index
-    respond_with(@questions = Question.all)
+    respond_with(@questions) if stale?(@questions = Question.all)
+    # respond_with(@questions = Question.all)
   end
 
   def new
