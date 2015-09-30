@@ -17,15 +17,15 @@
     .answers
       = render @question.answers, add_comment: true
     hr
-
-    = form_for [@question, @answer], method: :post, remote: true do |f|
-      = f.label 'Ваш ответ', class: 'text-error'
-      br
-      .answer-errors
-      = f.text_area :body, size: "60x12"
-      .links
-        = link_to_add_association 'add attachment', f, :attachments
-      = f.submit "Создать", class: 'btn btn-primary'
+    - cache ['new_answer_form', @question]
+      = form_for [@question, @answer], method: :post, remote: true do |f|
+        = f.label 'Ваш ответ', class: 'text-error'
+        br
+        .answer-errors
+        = f.text_area :body, size: "60x12"
+        .links
+          = link_to_add_association 'add attachment', f, :attachments
+        = f.submit "Создать", class: 'btn btn-primary'
     = link_to 'Показать все вопросы', action: :index, class: "btn btn-info"
 = subscribe_to "/questions/#{@question.id}/answers"
 = subscribe_to "/comments/question/#{@question.id}"

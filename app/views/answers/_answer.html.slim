@@ -1,5 +1,5 @@
-- cache answer do
- - if answer.persisted?
+- if answer.persisted?
+  - cache answer do
     div class = "answer-#{answer.id}"
       p= answer.body
       - if answer.best == true
