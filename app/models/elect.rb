@@ -1,5 +1,5 @@
 class Elect < ActiveRecord::Base
-  belongs_to :electable, polymorphic: true
+  belongs_to :electable, polymorphic: true, touch: true
   belongs_to :user
   validates :election, presence: true, inclusion: { in: [-1, 1] }
   validates :electable_type, presence: true, inclusion: { in: ['Question', 'Answer'] }

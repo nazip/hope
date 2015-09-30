@@ -18,10 +18,11 @@ div class = "question-#{question.id}"
     ul
       - question.attachments.each do |a|
         div class = "attachment-#{a.id}"
-          li= link_to a.file.identifier, a.file.url
-          - if policy(Attachment.new(attachable: question)).destroy?
-            ul
-              li= link_to "delete #{a.file.identifier}", attachment_path(a), method: :delete, remote: true
+          - cache a do
+            li= link_to a.file.identifier, a.file.url
+            - if policy(Attachment.new(attachable: question)).destroy?
+              ul
+                li= link_to "delete #{a.file.identifier}", attachment_path(a), method: :delete, remote: true
   =render 'comments/comment', commentable: question
   - if policy(Elect.new(electable: question)).create?
     div class = "links-Question-#{question.id}"

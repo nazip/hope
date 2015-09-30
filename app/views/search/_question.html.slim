@@ -1,3 +1,4 @@
-h1= 'questions'
-p= obj.title
-p= obj.body
+- cache ['search', obj]
+  h1= 'questions'
+  p= obj.title
+  p= obj.body

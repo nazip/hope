@@ -1,4 +1,5 @@
- - if answer.persisted?
+- if answer.persisted?
+  - cache answer do
     div class = "answer-#{answer.id}"
       p= answer.body
       - if answer.best == true
@@ -26,10 +27,11 @@
         ul
           - answer.attachments.each do |a|
             div class = "attachment-#{a.id}"
-              li= link_to a.file.identifier, a.file.url
-              - if policy(Attachment.new(attachable: answer)).destroy?
-                ul
-                  li= link_to "delete #{a.file.identifier}", attachment_path(a), method: :delete, remote: true
+              - cache a do
+                li= link_to a.file.identifier, a.file.url
+                - if policy(Attachment.new(attachable: answer)).destroy?
+                  ul
+                    li= link_to "delete #{a.file.identifier}", attachment_path(a), method: :delete, remote: true
       - if defined?(add_comment)
         =render 'comments/comment', commentable: answer, add_comment: true
       - else

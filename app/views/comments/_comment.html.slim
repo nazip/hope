@@ -1,12 +1,14 @@
-div[class = "#{commentable.class.name.downcase}-comments-#{commentable.id}"]
-  p Comments:
-  ul
-    - if !commentable.comments.empty?
-      - commentable.comments.each do |a|
-        li= a.body
-  - if policy(Comment.new()).create? and defined?(add_comment)
-    = link_to 'add comment', '', class: 'add-comment-link', data: { id: commentable.id }
-    br
-    = form_for [commentable, Comment.new], remote: true, html: { id: "comment-#{commentable.id}", class: 'add-comment' }, method: :post  do |f|
-      = f.text_area :body
-      = f.submit 'Сохранить', class: 'save-comment', data: {id: "#{commentable.id}"}
+  div[class = "#{commentable.class.name.downcase}-comments-#{commentable.id}"]
+    p Comments:
+    ul
+      - if !commentable.comments.empty?
+        - commentable.comments.each do |a|
+          - cache a do
+            li= a.body
+    - if policy(Comment.new()).create? and defined?(add_comment)
+      = link_to 'add comment', '', class: 'add-comment-link', data: { id: commentable.id }
+      br
+      - cache ['comment_form', commentable]
+        = form_for [commentable, Comment.new], remote: true, html: { id: "comment-#{commentable.id}", class: 'add-comment' }, method: :post  do |f|
+          = f.text_area :body
+          = f.submit 'Сохранить', class: 'save-comment', data: {id: "#{commentable.id}"}
